@@ -1,0 +1,7 @@
+{
+  "name": "english-vocabulary",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
