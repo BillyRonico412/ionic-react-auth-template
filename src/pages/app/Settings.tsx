@@ -18,13 +18,13 @@ const Settings = () => {
 		const [errSignOut] = await tryit(signOut)(auth)
 		if (errSignOut) {
 			setToast({
-				type: "danger",
+				color: "danger",
 				message: errSignOut.message,
 			})
 			return
 		}
 		setToast({
-			type: "success",
+			color: "success",
 			message: "Vous êtes déconnecté",
 		})
 	}, [setToast])

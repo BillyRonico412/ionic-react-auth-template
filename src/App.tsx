@@ -26,12 +26,14 @@ import "@ionic/react/css/text-transformation.css"
 /* Theme variables */
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { useAtom } from "jotai"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
+import CreateAccount from "./pages/CreateAccount"
 import Login from "./pages/Login"
 import MainTabs from "./pages/MainTabs"
 import "./theme/style.css"
 import "./theme/variables.css"
 import { toastAtom, userAtom } from "./utils"
+import ForgotPassword from "./pages/ForgotPassword"
 
 setupIonicReact()
 
@@ -44,6 +46,20 @@ const App: React.FC = () => {
 			setUser(user)
 		})
 	}, [setUser])
+
+	const renderNotLoginPage = useCallback(
+		(element: JSX.Element) => {
+			if (user === undefined) {
+				return <></>
+			}
+			if (user === null) {
+				return element
+			}
+			return <Redirect to="/app/game" />
+		},
+		[user],
+	)
+
 	return (
 		<IonApp>
 			<IonReactRouter>
@@ -51,15 +67,17 @@ const App: React.FC = () => {
 					<Route
 						exact
 						path="/login"
-						render={() => {
-							if (user === undefined) {
-								return <></>
-							}
-							if (user === null) {
-								return <Login />
-							}
-							return <Redirect to="/app" />
-						}}
+						render={() => renderNotLoginPage(<Login />)}
+					/>
+					<Route
+						exact
+						path="/create-account"
+						render={() => renderNotLoginPage(<CreateAccount />)}
+					/>
+					<Route
+						exact
+						path="/forgot-password"
+						render={() => renderNotLoginPage(<ForgotPassword />)}
 					/>
 					<Route exact path="/" render={() => <Redirect to="/login" />} />
 					<Route
@@ -78,7 +96,7 @@ const App: React.FC = () => {
 			</IonReactRouter>
 			<IonToast
 				isOpen={toast !== undefined}
-				color={toast?.type}
+				color={toast?.color}
 				message={toast?.message}
 				onDidDismiss={() => setToast(undefined)}
 				duration={3000}
