@@ -24,28 +24,22 @@ import "@ionic/react/css/text-alignment.css"
 import "@ionic/react/css/text-transformation.css"
 
 /* Theme variables */
-import { getAuth, onAuthStateChanged } from "firebase/auth"
-import { useAtom } from "jotai"
-import { useCallback, useEffect } from "react"
+import { useAtom, useAtomValue } from "jotai"
+import { useCallback } from "react"
+import Sync from "./components/Sync"
 import CreateAccount from "./pages/CreateAccount"
+import ForgotPassword from "./pages/ForgotPassword"
 import Login from "./pages/Login"
 import MainTabs from "./pages/MainTabs"
 import "./theme/style.css"
 import "./theme/variables.css"
 import { toastAtom, userAtom } from "./utils"
-import ForgotPassword from "./pages/ForgotPassword"
 
 setupIonicReact()
 
 const App: React.FC = () => {
-	const [user, setUser] = useAtom(userAtom)
+	const user = useAtomValue(userAtom)
 	const [toast, setToast] = useAtom(toastAtom)
-	useEffect(() => {
-		const auth = getAuth()
-		onAuthStateChanged(auth, (user) => {
-			setUser(user)
-		})
-	}, [setUser])
 
 	const renderNotLoginPage = useCallback(
 		(element: JSX.Element) => {
@@ -101,6 +95,7 @@ const App: React.FC = () => {
 				onDidDismiss={() => setToast(undefined)}
 				duration={3000}
 			/>
+			<Sync />
 		</IonApp>
 	)
 }
